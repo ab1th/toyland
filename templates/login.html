@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-In - Amazon</title>
+    <style>
+        body {
+            background-color: #f3f3f3;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            width: 350px;
+            margin: 60px auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 32px 28px 24px 28px;
+        }
+        .amazon-logo {
+            display: block;
+            margin: 0 auto 24px auto;
+            width: 120px;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 18px;
+        }
+        label {
+            font-size: 14px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 9px;
+            margin-bottom: 16px;
+            border: 1px solid #a6a6a6;
+            border-radius: 3px;
+            font-size: 16px;
+        }
+        .signin-btn {
+            width: 100%;
+            background: #ffd814;
+            border: 1px solid #fcd200;
+            border-radius: 3px;
+            padding: 10px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        .signin-btn:hover {
+            background: #f7ca00;
+        }
+        .help-links {
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+        .help-links a {
+            color: #0066c0;
+            text-decoration: none;
+        }
+        .help-links a:hover {
+            text-decoration: underline;
+        }
+        .new-account {
+            text-align: center;
+            margin-top: 24px;
+        }
+        .create-account-btn {
+            background: #e7e9ec;
+            border: 1px solid #adb1b8;
+            border-radius: 3px;
+            padding: 8px 0;
+            width: 100%;
+            font-size: 15px;
+            color: #111;
+            cursor: pointer;
+        }
+        .create-account-btn:hover {
+            background: #d7d9dc;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" class="amazon-logo">
+        <h1>Sign-In</h1>
+        <form id="loginForm">
+            <label for="username">Email or mobile phone number</label>
+            <input type="text" id="username" name="username" required autocomplete="username">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password">
+
+            <button type="submit" class="signin-btn">Sign-In</button>
+        </form>
+        <div class="help-links">
+            <a href="#" id="forgotPassword">Forgot your password?</a>
+        </div>
+        <div class="new-account">
+            <span>New to ToyLand?</span>
+            <button class="create-account-btn" id="createAccount" onclick="window.location.href='/register'">Create your ToyLand account</button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('/log_action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'forgot_password_clicked' })
+            });
+            alert('Password assistance is currently unavailable.');
+        });
+        document.getElementById('createAccount').addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch('/log_action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'create_account_clicked' })
+            });
+            alert('Account creation is currently unavailable.');
+        });
+    </script>
+</body>
+</html>

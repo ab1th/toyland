@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Upload - ToyLand{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">
+                        <i class="fas fa-upload me-2"></i>File Upload
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Info:</strong> Upload files to the server. All file types are accepted.
+                    </div>
+                    
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select File</label>
+                            <input type="file" class="form-control" id="file" name="file" required>
+                            <div class="form-text">Choose any file to upload to the server.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-upload me-2"></i>Upload File
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="uploadResult" class="mt-4" style="display: none;">
+                        <div class="alert" id="resultAlert">
+                            <span id="resultMessage"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Upload Examples:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Text Files:</strong> .txt, .log, .conf
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Images:</strong> .jpg, .png, .gif
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Documents:</strong> .pdf, .doc, .docx
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Scripts:</strong> .php, .py, .sh
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Archives:</strong> .zip, .tar, .rar
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Executables:</strong> .exe, .bat, .cmd
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Web Files:</strong> .html, .css, .js
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Any File:</strong> All extensions accepted
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    const fileInput = document.getElementById('file');
+    formData.append('file', fileInput.files[0]);
+    
+    fetch('/admin/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultDiv = document.getElementById('uploadResult');
+        const resultAlert = document.getElementById('resultAlert');
+        const resultMessage = document.getElementById('resultMessage');
+        
+        if (data.success) {
+            resultAlert.className = 'alert alert-success';
+            resultMessage.textContent = data.message;
+        } else {
+            resultAlert.className = 'alert alert-danger';
+            resultMessage.textContent = 'Upload failed: ' + data.message;
+        }
+        
+        resultDiv.style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const resultDiv = document.getElementById('uploadResult');
+        const resultAlert = document.getElementById('resultAlert');
+        const resultMessage = document.getElementById('resultMessage');
+        
+        resultAlert.className = 'alert alert-danger';
+        resultMessage.textContent = 'An error occurred during upload';
+        resultDiv.style.display = 'block';
+    });
+});
+</script>
+{% endblock %} 

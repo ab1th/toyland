@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Order Confirmation - ToyLand{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-check-circle me-2"></i>Order Confirmed!
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-success">
+                        <i class="fas fa-thumbs-up me-2"></i>
+                        <strong>Thank you for your order!</strong> Your order has been successfully placed and is being processed.
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>Order Details</h5>
+                            <p><strong>Order Number:</strong> #TOY-{{ range(1000, 9999) | random }}</p>
+                            <p><strong>Order Date:</strong> {{ current_date }}</p>
+                            <p><strong>Estimated Delivery:</strong> {{ shipping.days }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Shipping Address</h5>
+                            <p><strong>{{ shipping_address.name }}</strong></p>
+                            <p>{{ shipping_address.address }}</p>
+                            <p>{{ shipping_address.city }}, {{ shipping_address.state }} {{ shipping_address.zip }}</p>
+                            <p>{{ shipping_address.phone }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Payment Summary</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span>${{ "%.2f"|format(subtotal) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Shipping:</span>
+                                <span>${{ "%.2f"|format(shipping.cost) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tax:</span>
+                                <span>${{ "%.2f"|format(tax) }}</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total:</strong>
+                                <strong class="text-primary">${{ "%.2f"|format(grand_total) }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Order Items</h5>
+                        {% for item in cart_items %}
+                        <div class="row border-bottom py-3">
+                            <div class="col-md-2">
+                                <img src="{{ item.product.image }}" alt="{{ item.product.name }}" 
+                                     class="img-fluid rounded" style="max-height: 80px;">
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                <p class="text-muted mb-1">{{ item.product.category }} • {{ item.product.age_range }}</p>
+                                <div class="text-warning">
+                                    {% for i in range(item.product.rating|int) %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                    {% if item.product.rating % 1 != 0 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span class="badge bg-secondary">{{ item.quantity }}</span>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <strong>${{ "%.2f"|format(item.item_total) }}</strong>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>What's Next?</h5>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
+                                <h6>Order Confirmation</h6>
+                                <p class="small text-muted">You'll receive an email confirmation shortly</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-truck fa-2x text-success mb-2"></i>
+                                <h6>Shipping Updates</h6>
+                                <p class="small text-muted">Track your order with real-time updates</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-gift fa-2x text-warning mb-2"></i>
+                                <h6>Fast Delivery</h6>
+                                <p class="small text-muted">Your toys will arrive in {{ shipping.days }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('home') }}" class="btn btn-primary me-2">
+                            <i class="fas fa-home me-1"></i>Continue Shopping
+                        </a>
+                        <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-gift me-1"></i>Browse More Toys
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - ToyLand{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Product Images -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <img src="{{ product.image }}" alt="{{ product.name }}" 
+                     class="img-fluid rounded" style="max-height: 400px; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Info -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h3 mb-2">{{ product.name }}</h1>
+                
+                <!-- Rating and Reviews -->
+                <div class="d-flex align-items-center mb-3">
+                    <div class="text-warning me-2">
+                        {% for i in range(product.rating|int) %}
+                            <i class="fas fa-star"></i>
+                        {% endfor %}
+                        {% if product.rating % 1 != 0 %}
+                            <i class="fas fa-star-half-alt"></i>
+                        {% endif %}
+                    </div>
+                    <span class="text-muted me-2">{{ product.rating }}/5</span>
+                    <span class="text-muted">({{ product.reviews }} reviews)</span>
+                </div>
+                
+                <!-- Price -->
+                <div class="mb-3">
+                    <span class="h2 text-danger">${{ "%.2f"|format(product.price) }}</span>
+                    {% if product.price < 30 %}
+                    <span class="badge bg-danger ms-2">
+                        <i class="fas fa-tag me-1"></i>Deal
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Product Details -->
+                <div class="mb-4">
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Category:</strong><br>
+                            <span class="text-muted">{{ product.category }}</span>
+                        </div>
+                        <div class="col-6">
+                            <strong>Age Range:</strong><br>
+                            <span class="text-muted">{{ product.age_range }}</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <strong>Shipping Weight:</strong><br>
+                            <span class="text-muted">{{ product.shipping_weight }} lbs</span>
+                        </div>
+                        <div class="col-6">
+                            <strong>Availability:</strong><br>
+                            <span class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>In Stock
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4">
+                    <h6>Description</h6>
+                    <p class="text-muted">{{ product.desc }}</p>
+                </div>
+                
+                <!-- Add to Cart Form -->
+                <form method="POST" class="mb-4">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <select class="form-select" id="quantity" name="quantity">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <button type="submit" class="btn btn-amazon btn-lg w-100">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Shipping Info -->
+                <div class="alert alert-info">
+                    <i class="fas fa-shipping-fast me-2"></i>
+                    <strong>Free shipping</strong> on orders over $35
+                </div>
+                
+                <!-- Trust Badges -->
+                <div class="d-flex gap-3 mb-3">
+                    <div class="text-center">
+                        <i class="fas fa-shield-alt fa-2x text-success mb-1"></i>
+                        <div class="small text-muted">Safe & Secure</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-undo fa-2x text-warning mb-1"></i>
+                        <div class="small text-muted">Easy Returns</div>
+                    </div>
+                    <div class="text-center">
+                        <i class="fas fa-headset fa-2x text-info mb-1"></i>
+                        <div class="small text-muted">24/7 Support</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Details Tabs -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white">
+                <ul class="nav nav-tabs card-header-tabs" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab">
+                            <i class="fas fa-info-circle me-2"></i>Product Details
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">
+                            <i class="fas fa-star me-2"></i>Customer Reviews ({{ reviews|length }})
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping" type="button" role="tab">
+                            <i class="fas fa-truck me-2"></i>Shipping & Returns
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content" id="productTabsContent">
+                    <!-- Product Details Tab -->
+                    <div class="tab-pane fade show active" id="details" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Product Features</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-check text-success me-2"></i>High-quality materials</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Age-appropriate design</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Educational value</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Durable construction</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Specifications</h6>
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Category:</strong></td>
+                                        <td>{{ product.category }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Age Range:</strong></td>
+                                        <td>{{ product.age_range }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Weight:</strong></td>
+                                        <td>{{ product.shipping_weight }} lbs</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Rating:</strong></td>
+                                        <td>{{ product.rating }}/5 ({{ product.reviews }} reviews)</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reviews Tab -->
+                    <div class="tab-pane fade" id="reviews" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h6 class="mb-0">Customer Reviews</h6>
+                            <button class="btn btn-amazon btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                <i class="fas fa-plus me-1"></i>Write a Review
+                            </button>
+                        </div>
+                        
+                        {% if reviews %}
+                            {% for review in reviews %}
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="text-warning me-2">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="text-muted small">Verified Purchase</span>
+                                </div>
+                                <p class="mb-1">{{ review|safe }}</p>
+                                <small class="text-muted">Posted on {{ "now"|date("M d, Y") }}</small>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                                <h6 class="text-muted">No reviews yet</h6>
+                                <p class="text-muted">Be the first to review this product!</p>
+                                <button class="btn btn-amazon" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                    Write the First Review
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Shipping Tab -->
+                    <div class="tab-pane fade" id="shipping" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Shipping Information</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-truck text-primary me-2"></i>Free shipping on orders over $35</li>
+                                    <li><i class="fas fa-clock text-warning me-2"></i>Standard delivery: 5-7 business days</li>
+                                    <li><i class="fas fa-rocket text-success me-2"></i>Expedited delivery: 2-3 business days</li>
+                                    <li><i class="fas fa-plane text-info me-2"></i>Overnight delivery available</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Return Policy</h6>
+                                <ul class="list-unstyled">
+                                    <li><i class="fas fa-undo text-success me-2"></i>30-day return policy</li>
+                                    <li><i class="fas fa-box text-primary me-2"></i>Free returns on most items</li>
+                                    <li><i class="fas fa-shield-alt text-warning me-2"></i>Original packaging required</li>
+                                    <li><i class="fas fa-credit-card text-info me-2"></i>Full refund within 30 days</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Write a Review</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="review" class="form-label">Your Review</label>
+                        <textarea class="form-control" id="review" name="review" rows="4" required 
+                                  placeholder="Share your experience with this product..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-amazon">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Related Products -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h4 class="mb-4">
+            <i class="fas fa-thumbs-up me-2"></i>You Might Also Like
+        </h4>
+        <div class="row g-4">
+            {% for related_product in products[:4] %}
+            {% if related_product.id != product.id %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="{{ related_product.image }}" class="card-img-top" alt="{{ related_product.name }}" 
+                         style="height: 150px; object-fit: cover;">
+                    <div class="card-body">
+                        <h6 class="card-title">{{ related_product.name }}</h6>
+                        <p class="text-danger fw-bold">${{ "%.2f"|format(related_product.price) }}</p>
+                        <a href="{{ url_for('product_detail', product_id=related_product.id) }}" 
+                           class="btn btn-outline-secondary btn-sm w-100">
+                            View Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

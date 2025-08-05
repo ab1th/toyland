@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin - Login Attempts</title></head>
+<body>
+<h1>Login Attempts</h1>
+{% if login_attempts %}
+  <ul>
+  {% for attempt in login_attempts %}
+    <li>
+      Time: {{ attempt.time }} | IP: {{ attempt.ip }} | User-Agent: {{ attempt.user_agent }} <br>
+      Username: {{ attempt.username }} | Password: {{ attempt.password }}
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>No login attempts recorded yet.</p>
+{% endif %}
+</body>
+</html>

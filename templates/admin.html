@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Amazon</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f3f3f3; margin: 0; }
+        .navbar {
+            background: #232f3e;
+            color: #fff;
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff9900;
+            letter-spacing: 1px;
+        }
+        .navbar .user {
+            font-size: 16px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            padding: 32px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 18px;
+        }
+        .search-bar {
+            margin-bottom: 18px;
+        }
+        .search-bar input {
+            padding: 8px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 15px;
+        }
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        .logs-table th, .logs-table td {
+            border: 1px solid #e3e3e3;
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .logs-table th {
+            background: #f7f7f7;
+        }
+        .logs-table tr:nth-child(even) {
+            background: #fafafa;
+        }
+        .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .pagination button {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .pagination button[disabled] {
+            color: #aaa;
+            border-color: #eee;
+            cursor: not-allowed;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 10px; }
+            .navbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" aria-label="Main Navigation">
+        <span class="logo">Admin Console</span>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <a href="/admin/system" style="color:#fff; text-decoration:underline;">System Commands</a>
+            <a href="/admin/upload" style="color:#fff; text-decoration:underline;">File Upload</a>
+            <span class="user">Logged in as: <b>{{ username }}</b> | <a href="/logout" style="color:#fff; text-decoration:underline;">Logout</a></span>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Honeypot Logs</h1>
+        <div class="search-bar">
+            <label for="search" style="font-weight:600;">Search:</label>
+            <input type="text" id="search" placeholder="Search logs..." aria-label="Search logs">
+        </div>
+        <table class="logs-table" aria-label="Honeypot logs table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>IP</th>
+                    <th>User Agent</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody id="logsBody">
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td>{{ log.ip }}</td>
+                    <td>{{ log.user_agent }}</td>
+                    <td>{{ log.action_type }}</td>
+                    <td><pre style="white-space:pre-wrap;word-break:break-all;">{{ log.details|default({})|tojson }}</pre></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination" aria-label="Pagination">
+            <button id="prevPage" disabled>Previous</button>
+            <span id="pageInfo">Page 1</span>
+            <button id="nextPage">Next</button>
+        </div>
+    </div>
+    <script>
+        // Simple client-side search and pagination
+        const logs = Array.from(document.querySelectorAll('#logsBody tr'));
+        const searchInput = document.getElementById('search');
+        const prevBtn = document.getElementById('prevPage');
+        const nextBtn = document.getElementById('nextPage');
+        const pageInfo = document.getElementById('pageInfo');
+        let currentPage = 1;
+        const pageSize = 15;
+        let filteredLogs = logs;
+
+        function renderPage(page) {
+            logs.forEach(row => row.style.display = 'none');
+            filteredLogs.forEach((row, i) => {
+                if (i >= (page-1)*pageSize && i < page*pageSize) {
+                    row.style.display = '';
+                }
+            });
+            prevBtn.disabled = page === 1;
+            nextBtn.disabled = page * pageSize >= filteredLogs.length;
+            pageInfo.textContent = `Page ${page}`;
+        }
+        function filterLogs() {
+            const q = searchInput.value.toLowerCase();
+            filteredLogs = logs.filter(row => row.textContent.toLowerCase().includes(q));
+            currentPage = 1;
+            renderPage(currentPage);
+        }
+        searchInput.addEventListener('input', filterLogs);
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage(currentPage);
+            }
+        });
+        nextBtn.addEventListener('click', () => {
+            if (currentPage * pageSize < filteredLogs.length) {
+                currentPage++;
+                renderPage(currentPage);
+            }
+        });
+        // Initial render
+        renderPage(currentPage);
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - ToyLand{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h2 class="mb-0">
+                    <i class="fas fa-shopping-cart me-2"></i>Shopping Cart
+                    <span class="text-muted fs-6">({{ cart_items|length }} items)</span>
+                </h2>
+            </div>
+            <div class="card-body">
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <div class="row border-bottom py-3">
+                        <div class="col-md-2">
+                            <img src="{{ item.product.image }}" alt="{{ item.product.name }}" 
+                                 class="img-fluid rounded" style="max-height: 100px;">
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-1">{{ item.product.name }}</h5>
+                            <p class="text-muted mb-1">{{ item.product.category }} • {{ item.product.age_range }}</p>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="text-warning me-1">
+                                    {% for i in range(item.product.rating|int) %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                    {% if item.product.rating % 1 != 0 %}
+                                        <i class="fas fa-star-half-alt"></i>
+                                    {% endif %}
+                                </div>
+                                <span class="text-muted small">({{ item.product.reviews }})</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="text-success me-2">
+                                    <i class="fas fa-check-circle"></i> In Stock
+                                </span>
+                                <span class="text-muted small">Ships from ToyLand</span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group input-group-sm">
+                                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity({{ item.product.id }}, -1)">-</button>
+                                <input type="number" class="form-control text-center" value="{{ item.quantity }}" 
+                                       min="1" max="99" id="qty-{{ item.product.id }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity({{ item.product.id }}, 1)">+</button>
+                            </div>
+                            <form method="POST" class="mt-2">
+                                <input type="hidden" name="action" value="remove">
+                                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                <button type="submit" class="btn btn-link text-danger p-0 small">
+                                    <i class="fas fa-trash me-1"></i>Delete
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <div class="fw-bold">${{ "%.2f"|format(item.item_total) }}</div>
+                            <div class="text-muted small">${{ "%.2f"|format(item.product.price) }} each</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="row mt-3">
+                        <div class="col-12 text-end">
+                            <a href="{{ url_for('products') }}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-1"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Your ToyLand Cart is empty</h4>
+                        <p class="text-muted">Check out today's deals and add some toys to your cart!</p>
+                        <a href="{{ url_for('products') }}" class="btn btn-amazon">
+                            <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        {% if cart_items %}
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Items ({{ cart_items|length }}):</span>
+                    <span>${{ "%.2f"|format(subtotal) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Shipping & handling:</span>
+                    <span>${{ "%.2f"|format(shipping.cost) }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Estimated tax:</span>
+                    <span>${{ "%.2f"|format(tax) }}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong>Order total:</strong>
+                    <strong class="text-primary">${{ "%.2f"|format(grand_total) }}</strong>
+                </div>
+                
+                <div class="alert alert-info small">
+                    <i class="fas fa-info-circle me-1"></i>
+                    <strong>Free shipping</strong> on orders over $35
+                </div>
+                
+                <a href="{{ url_for('checkout') }}" class="btn btn-amazon w-100 mb-2">
+                    <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                </a>
+                
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Secure checkout powered by ToyLand
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-gift me-2"></i>Add a gift receipt
+                </h6>
+                <p class="card-text small text-muted">
+                    Include a gift receipt for easy returns
+                </p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="giftReceipt">
+                    <label class="form-check-label small" for="giftReceipt">
+                        This order contains a gift
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function updateQuantity(productId, change) {
+    const input = document.getElementById('qty-' + productId);
+    let newQty = parseInt(input.value) + change;
+    
+    if (newQty < 1) newQty = 1;
+    if (newQty > 99) newQty = 99;
+    
+    // Create form and submit
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.innerHTML = `
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="product_id" value="${productId}">
+        <input type="hidden" name="quantity" value="${newQty}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+</script>
+{% endblock %} 

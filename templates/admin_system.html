@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Admin System - ToyLand{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-terminal me-2"></i>System Administration
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This is a system administration panel. Use with caution.
+                    </div>
+                    
+                    <form id="commandForm">
+                        <div class="mb-3">
+                            <label for="command" class="form-label">System Command</label>
+                            <input type="text" class="form-control" id="command" name="command" 
+                                   placeholder="Enter system command (e.g., ls, pwd, whoami)" required>
+                            <div class="form-text">Execute system commands directly on the server.</div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-play me-2"></i>Execute Command
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="output" class="mt-4" style="display: none;">
+                        <h5>Command Output:</h5>
+                        <div class="bg-dark text-light p-3 rounded">
+                            <pre id="commandOutput"></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Common Commands:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <code>ls -la</code> - List all files
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>pwd</code> - Show current directory
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>whoami</code> - Show current user
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>cat /etc/passwd</code> - Show users
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <code>ps aux</code> - Show processes
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>netstat -tuln</code> - Show network
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>uname -a</code> - System info
+                                    </li>
+                                    <li class="list-group-item">
+                                        <code>id</code> - User ID info
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('commandForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const command = document.getElementById('command').value;
+    const formData = new FormData();
+    formData.append('command', command);
+    
+    fetch('/admin/system', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const outputDiv = document.getElementById('output');
+        const outputPre = document.getElementById('commandOutput');
+        
+        if (data.success) {
+            outputPre.textContent = data.output;
+            outputDiv.style.display = 'block';
+        } else {
+            outputPre.textContent = 'Error: ' + data.error;
+            outputDiv.style.display = 'block';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while executing the command');
+    });
+});
+</script>
+{% endblock %} 

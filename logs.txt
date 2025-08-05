@@ -1,0 +1,80 @@
+[+] Attempt:
+Time: 2025-07-23 03:02:37
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: mrxjawahar
+Password: 12345678
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:06:32
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: haraharahariharan
+Password: naan than da leo
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:22:59
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: hacker1
+Password: testthesite
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:30:38
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: hecker2
+Password: testingsite2
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:34:52
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: russianassasin
+Password: ihatetrumph
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:37:32
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: finternet
+Password: password
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:43:17
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: finternet
+Password: internetsucks
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:50:06
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: hecker2
+Password: imsickofit
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:53:23
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: modiji
+Password: bahartmathakijai
+
+--------------------------------------------------
+[+] Attempt:
+Time: 2025-07-23 03:56:25
+IP: 127.0.0.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0
+Username: finternet
+Password: windows123
+
+--------------------------------------------------
